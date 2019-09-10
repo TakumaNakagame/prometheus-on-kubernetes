@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: monitoring
+  labels:
+    app: prometheus
+data:
+  prometheus-rules.yml: |
+groups:
+- name: example
+  interval: 1m
+  rules:
+  - alert: memory-usge-high
+    expr: node_memory_Active_bytes / node_memory_MemTotal_bytes > 0.8
+    for: 5m
+  - alert: server-status
+    expr: up == 0
+    for: 10s
