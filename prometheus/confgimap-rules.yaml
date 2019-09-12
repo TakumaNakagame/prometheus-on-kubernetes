@@ -16,4 +16,4 @@ data:
         for: 5m
       - alert: server-status
         expr: up == 0
-        for: 10s
+        for: 1m
