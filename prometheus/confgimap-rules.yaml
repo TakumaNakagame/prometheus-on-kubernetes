@@ -8,12 +8,18 @@ metadata:
 data:
   prometheus-rules.yml: |
     groups:
-    - name: example
+    - name: target_status
       interval: 1m
       rules:
-      - alert: memory-usge-high
+      - alert: cpu_usage_high
+        expr:  1 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m]))) > 0.8
+        for: 5m
+      - alert: memory_usge_high
         expr: node_memory_Active_bytes / node_memory_MemTotal_bytes > 0.8
         for: 5m
-      - alert: server-status
+      - alert: target_status
         expr: up == 0
-        for: 1m
+        for: 5m
+      - alert: disk_free_space_row
+        expr: node_filesystem_free_bytes{mountpoint ="/"} / node_filesystem_size_bytes{mountpoint ="/"} < 0.2
+        for: 5m
