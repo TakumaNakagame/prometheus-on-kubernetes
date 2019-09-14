@@ -52,6 +52,17 @@ data:
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         metrics_path: '/metrics/cadvisor'
 
+      - job_name: 'kube_dns'
+        kubernetes_sd_configs:
+        - role: endpoints
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_service_label_k8s_app]
+          action: keep
+          regex: kube-dns
+        - source_labels: [__address__]
+          action: drop
+          regex: .+:53
+
       - job_name: 'kube-state-metrics'
         kubernetes_sd_configs:
         - role: endpoints
